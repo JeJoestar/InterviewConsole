@@ -14,12 +14,6 @@ namespace InterviewConsole
     {
         const string ConnectionString = "Data Source=DESKTOP-EI1DIVE\\JEJOESTAR;Initial Catalog=Test;User ID=testUser;Password=pass@word1;";
         const string BaseUrl = "http://localhost:64014/EmployeeService.svc";
-        public class Employee
-        {
-            public int ID { get; set; }
-            public string Name { get; set; }
-            public bool Enable { get; set; }
-        }
 
         static async Task Main(string[] args)
         {
@@ -32,14 +26,13 @@ namespace InterviewConsole
 
         private static async Task PutRequest()
         {
-            int id = 1;
             int enable = 1;
 
-            using (HttpClient client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
+            using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    string url = $"EnableEmployee?id={id}";
+                    string url = $"{BaseUrl}/EnableEmployee?id=1";
 
                     var payload = new { enable };
                     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
@@ -59,15 +52,16 @@ namespace InterviewConsole
 
         private static async Task GetRequest()
         {
-            using (HttpClient client = new HttpClient { BaseAddress = new Uri(BaseUrl) })
+            using (HttpClient client = new HttpClient())
             {
                 try
                 {
-                    HttpResponseMessage response = await client.GetAsync("GetEmployeeById?id=1");
+                    string url = $"{BaseUrl}/GetEmployeeById?id=1";
+
+                    HttpResponseMessage response = await client.GetAsync(url);
                     response.EnsureSuccessStatusCode();
 
                     var employeeJson = await response.Content.ReadAsStringAsync();
-
 
                     Console.WriteLine(employeeJson);
                 }
